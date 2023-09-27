@@ -1,37 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+
 *{
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: 'VT323', monospace;
 }
 html{
-  font-size: 40px;
-  background-color: rgba(232, 224, 233, 0.5);
+  background-color: black;
 }
 .square{
-  font-size: 30px;
-  font-weight: 400;
+  font-size: 50px;
+  font-weight: 700;
   width: 100px;
   height: 100px;
-  border: 3px solid rebeccapurple;
-  background-color: white;
+  background-color: black;
   cursor: pointer;
-  padding: 25px 0;
   text-align: center;
-  background-color: rgba(232, 224, 233, 0.1);
+  border: 3px solid rgba(254,254,254, 0.9);
+
 }
 .square-x{
-  color:#4CBF0D;
+  color:chartreuse;
 }
 .square-y{
-  color:#D49339;
+  color:orange;
 }
 
 .board{
   display: grid;
   align-items: center;
   justify-content: center;
-  margin-left: 150px
+  margin-left: 130px;
+  border: 3px solid rgba(254,254,254, 0.9);
 }
+
 .board-row{
   max-height: 100px;
   display: flex;
@@ -41,42 +45,50 @@ html{
   justify-content: space-around;
 }
 .status{
+  font-size: 60px;
+  font-weight: 700;
   width: 400px;
-  margin: 50px auto 80px;
+  margin: 50px auto 75px;
   min-height: 80px;
   text-align: center;
-  color: rebeccapurple;
+  color: white;
+  letter-spacing: 2px;
 }
 .status-win--x{
   font-size: 60px;
-  color: #4CBF0D;
+  font-weight: 700;
+  color: chartreuse;
 }
 .status-win--y{
   font-size: 60px;
-  color:#D49339;
+  font-weight: 700;
+  color: orange;
 }
 .status--over{
   font-size: 60px;
-  color:darkred;
+  font-weight: 700;
+  color:red;
 }
 .moves-item{
   font-size: 20px;
+  font-weight: 700;
 }
 
 .move{
-  font-size: 20px;
+  font-size: 30px;
+  font-weight: 700;
   background: none;
   border: none;
   cursor: pointer;
 }
 .move-to-start{
-  color: rebeccapurple;
+  color: rgba(254,254,254, 0.9);
 }
 .move-to-X{
-  color: #4CBF0D;
+  color: chartreuse;
 }
 .move-to-O{
-  color:#D49339;
+  color:orange;
 }
 
 .move-list{
@@ -91,4 +103,29 @@ html{
 .container{
   max-width: 1200px;
   margin-left: 40px;
+}
+
+.modal{
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0,0,0,1);
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  transform: scale(0);
+  transition: 0.5s;
+}
+.modal.active{
+  transform: scale(1);
+}
+.modal__content{
+  color: white;
+  padding: 20px;
+  background-color: black;
+  width: 350px;
+  height: 400px;
+  border: 5px solid white;
 }

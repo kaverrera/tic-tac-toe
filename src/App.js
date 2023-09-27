@@ -2,7 +2,9 @@ import './App.css';
 import {useState} from 'react';
 
 function Square({value, onSquareClick}) {
-    return <button className='square' onClick={onSquareClick}>{value}</button>;
+    return <td>
+        <button className='square' onClick={onSquareClick}>{value}</button>
+    </td>;
 }
 
 function Board({xIsNext, squares, onPlay}) {
@@ -20,25 +22,37 @@ function Board({xIsNext, squares, onPlay}) {
 
     return (
         <>
-            <div className='board'>
-                <div className="board-row">
+            <table className='board'>
+                <tbody>
+                <tr className="board-row">
                     <Square value={squares[0]} onSquareClick={(() => handleClick(0))}/>
                     <Square value={squares[1]} onSquareClick={(() => handleClick(1))}/>
                     <Square value={squares[2]} onSquareClick={(() => handleClick(2))}/>
-                </div>
-                <div className="board-row">
+                </tr>
+                <tr className="board-row">
                     <Square value={squares[3]} onSquareClick={(() => handleClick(3))}/>
                     <Square value={squares[4]} onSquareClick={(() => handleClick(4))}/>
                     <Square value={squares[5]} onSquareClick={(() => handleClick(5))}/>
-                </div>
-                <div className="board-row">
+                </tr>
+                <tr className="board-row">
                     <Square value={squares[6]} onSquareClick={(() => handleClick(6))}/>
                     <Square value={squares[7]} onSquareClick={(() => handleClick(7))}/>
                     <Square value={squares[8]} onSquareClick={(() => handleClick(8))}/>
-                </div>
-            </div>
+                </tr>
+                </tbody>
+            </table>
         </>
     );
+}
+
+function Modal({active}) {
+    return <div className={active ? 'modal active': 'modal'}>
+        <div className="modal__content">
+            <h1>Game over</h1>
+            <p>Lives</p>
+            <div>!!!!!!!!!</div>
+        </div>
+    </div>
 }
 
 export default function Game() {
@@ -47,17 +61,25 @@ export default function Game() {
     const [currentMove, setCurrentMove] = useState(0);
     const currentSquares = history[currentMove];
     const xIsNext = currentMove % 2 === 0;
-    const winner = calculateWinner(currentSquares);
-    let status, statusClass;
+
+    let winner;
+    if (calculateWinner(currentSquares)) {
+        winner = calculateWinner(currentSquares);
+    }
+    let status, statusClass, modalActive;
     if (winner) {
         status = "Winner: " + winner;
-        statusClass = winner==='X'? 'status-win--x': "status-win--y";
-    } else if (currentMove===9){
+        statusClass = winner === 'X' ? 'status-win--x' : "status-win--y";
+         modalActive = true;
+    } else if (currentMove === 9) {
         status = "Game over!";
         statusClass = 'status--over'
+         modalActive = true;
     } else {
         status = "Next player: " + (xIsNext ? "X" : "O");
+         modalActive = false;
     }
+
 
     function handlePlay(nextSquares) {
         const nextHistory = [
@@ -80,11 +102,11 @@ export default function Game() {
             description = 'Go to game start';
         }
         let color;
-        if (move===0){
+        if (move === 0) {
             color = "move-to-start"
-        } else if(move % 2 === 0){
+        } else if (move % 2 === 0) {
             color = "move-to-O"
-        } else{
+        } else {
             color = "move-to-X"
         }
 
@@ -112,9 +134,12 @@ export default function Game() {
                     </div>
                 </div>
             </div>
+            <Modal active={modalActive}/>
+            
         </>
     );
 }
+
 
 // Функция проверки игры
 function calculateWinner(squares) {
@@ -134,14 +159,7 @@ function calculateWinner(squares) {
             squares[a]?.props?.children &&
             squares[a]?.props?.children === squares[b]?.props?.children &&
             squares[a]?.props?.children === squares[c]?.props?.children) {
-            return squares[a].props.children
-        } else if (
-            squares[a] &&
-            squares[a] === squares[b] &&
-            squares[a] === squares[c]
-        ) {
-            return squares[a];
-
+            return squares[a].props.children;
         }
     }
     return null;
