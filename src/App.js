@@ -1,5 +1,5 @@
 import './App.css';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 
 function Square({value, onSquareClick}) {
     return <td>
@@ -8,9 +8,9 @@ function Square({value, onSquareClick}) {
 }
 
 function Board({xIsNext, squares, onPlay}) {
-
     function handleClick(i) {
         if (squares[i] || calculateWinner(squares)) return;
+
         const nextSquares = squares.slice();
         if (xIsNext) {
             nextSquares[i] = <p className='square-x'>X</p>;
@@ -45,20 +45,23 @@ function Board({xIsNext, squares, onPlay}) {
     );
 }
 
-function Modal({active}) {
-    return <div className={active ? 'modal active': 'modal'}>
-        <div className="modal__content">
-            <h1>Game over</h1>
-            <p>Lives</p>
-            <div>!!!!!!!!!</div>
+function Modal({active, children}) {
+
+    return <div className={active ? 'modal active' : 'modal'}>
+        <div className={active ? 'modal__content active' : 'modal__content'}>
+            {children}
         </div>
     </div>
 }
 
+
 export default function Game() {
+    // let lives = 3;
     const [history, setHistory] = useState(
         [Array(9).fill(null)]);
     const [currentMove, setCurrentMove] = useState(0);
+    const [live, setLives] = useState(3)
+
     const currentSquares = history[currentMove];
     const xIsNext = currentMove % 2 === 0;
 
@@ -66,20 +69,26 @@ export default function Game() {
     if (calculateWinner(currentSquares)) {
         winner = calculateWinner(currentSquares);
     }
-    let status, statusClass, modalActive;
+    let status, statusClass, active;
     if (winner) {
         status = "Winner: " + winner;
         statusClass = winner === 'X' ? 'status-win--x' : "status-win--y";
-         modalActive = true;
+        active = true;
     } else if (currentMove === 9) {
         status = "Game over!";
         statusClass = 'status--over'
-         modalActive = true;
+        active = true;
     } else {
         status = "Next player: " + (xIsNext ? "X" : "O");
-         modalActive = false;
+        active = false;
     }
+    const [modalActive, setModalActive] = useState(active)
 
+    useEffect(() => {
+        if (status === "Game over!" || status.startsWith("Winner")) {
+           setTimeout(()=> setModalActive(true), 500)
+        }
+    }, [status])
 
     function handlePlay(nextSquares) {
         const nextHistory = [
@@ -88,6 +97,8 @@ export default function Game() {
         ];
         setHistory(nextHistory);
         setCurrentMove(nextHistory.length - 1);
+        if (nextHistory.length === 0) {
+        }
     }
 
     function jumpTo(nextMove) {
@@ -110,7 +121,6 @@ export default function Game() {
             color = "move-to-X"
         }
 
-
         return (
             <li className="moves-item" key={move}>
                 <button onClick={() => jumpTo(move)} className={`move ${color}`}>
@@ -119,9 +129,32 @@ export default function Game() {
             </li>
         );
     });
+
+    function restart() {
+        setHistory([Array(9).fill(null)]);
+        setCurrentMove(0)
+        setModalActive(false)
+    }
+
+    function watch() {
+        setLives(3);
+        setHistory([Array(9).fill(null)]);
+        setCurrentMove(0)
+        setModalActive(false)
+    }
+
+        useEffect(()=>{
+            setTimeout(()=>{
+                if (status==="Game over!"){
+                    setLives((v)=>v-1)
+                }
+            }, 1000)
+
+        },[status])
+
     return (
         <>
-            <div className={`status ${statusClass}`}>{status}</div>
+            <div className={`status ${statusClass}`} onClick={() => setModalActive(true)}>{status}</div>
             <div className='container'>
                 <div className="game">
                     <div className="game-board">
@@ -134,8 +167,27 @@ export default function Game() {
                     </div>
                 </div>
             </div>
-            <Modal active={modalActive}/>
-            
+            <Modal active={modalActive}>
+                <h1 className='modal__title'>{status}</h1>
+                <p className='modal__desc'>{live ? 'Lives' : "Lives are over!"}</p>
+                <p className={live === 0 ? 'modal__text' : 'modal__text--hidden'}>Watch the video to get lives:</p>
+                <div className={live ? 'modal__lives' : 'modal__lives--hidden'}>
+                    <img className={live >= 1 ? 'modal__live' : "modal__live--hidden"} src='heart.png' alt='Lives'/>
+                    <img className={live >= 2 ? 'modal__live' : "modal__live--hidden"} src='heart.png' alt='Lives'/>
+                    <img className={live >= 3 ? 'modal__live' : "modal__live--hidden"} src='heart.png' alt='Lives'/>
+                </div>
+                {live ? <div className='btn__container'>
+                <button className='modal__btn modal__btn--play' onClick={() => restart()}>Play again!</button>
+            </div>
+                :
+                <div className='btn__container'>
+                    <button className='modal__btn modal__btn--watch' onClick={() => watch()}>Watch the video!</button>
+                    <button className='modal__btn modal__btn--play' disabled={true} onClick={() => restart()}>Play again!
+                    </button>
+                </div>}
+            </Modal>
+
+
         </>
     );
 }
