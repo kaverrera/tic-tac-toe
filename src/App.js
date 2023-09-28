@@ -46,7 +46,6 @@ function Board({xIsNext, squares, onPlay}) {
 }
 
 function Modal({active, children}) {
-
     return <div className={active ? 'modal active' : 'modal'}>
         <div className={active ? 'modal__content active' : 'modal__content'}>
             {children}
@@ -169,7 +168,7 @@ export default function Game() {
             </div>
             <Modal active={modalActive}>
                 <h1 className='modal__title'>{status}</h1>
-                <p className='modal__desc'>{live ? 'Lives' : "Lives are over!"}</p>
+                <p className='modal__desc'>{live ? 'Lives:' : "Lives are over!"}</p>
                 <p className={live === 0 ? 'modal__text' : 'modal__text--hidden'}>Watch the video to get lives:</p>
                 <div className={live ? 'modal__lives' : 'modal__lives--hidden'}>
                     <img className={live >= 1 ? 'modal__live' : "modal__live--hidden"} src='heart.png' alt='Lives'/>
