@@ -17,7 +17,43 @@ html {
     margin: auto;
     justify-content: space-around;
 }
+.home{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    background-color: black;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+.home--unactive{
+    transform: scale(0);
+    transition-timing-function: steps(8, jump-start);
+    transition-duration: 0.4s;
+}
+.home__content{
+    max-width: 450px;
+    margin: auto;
+    color: white;
+    overflow: hidden;
+}
+.home__title{
+    font-size: 100px;
 
+}
+.home__text{
+    font-size: 30px;
+    text-align: center;
+    animation: marquee 7s steps(40, jump-start) infinite;
+}
+@keyframes marquee{
+    0% {
+        transform: translateX(100%)
+    }
+    100% {
+        transform: translateX(-100%)
+    }
+}
 .square {
     font-size: 55px;
     font-weight: 700;
@@ -137,11 +173,21 @@ html {
 
 .modal.active {
     opacity: 1;
+    display: flex;
+    flex-direction: column;
 }
-
+.close {
+    width: 20px;
+    height: 25px;
+    position: relative;
+    left: 245px;
+    bottom: 15px;
+    top: 10px;
+    cursor: pointer;
+}
 .modal__content {
     color: white;
-    padding: 30px 50px;
+    padding: 10px 50px 30px 50px;
     background-color: black;
     width: 350px;
     height: 400px;
@@ -158,9 +204,32 @@ html {
 
 .modal__title {
     font-size: 58px;
-    padding-bottom: 40px;
+    padding-bottom: 10px;
 }
-
+.modal__line{
+    margin-bottom: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    letter-spacing: -0.5px;
+    font-weight: 500;
+}
+.modal__line--over{
+    margin-bottom: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    letter-spacing: -0.5px;
+    font-weight: 500;
+}
+.modal__line:last-of-type{
+    margin-bottom: 40px;
+}
+.modal__line--over:last-of-type {
+    margin-bottom: 25px;
+}
+.modal__title--over{
+    font-size: 58px;
+    padding-bottom: 5px;
+}
 .modal__desc {
     text-align: left;
     font-size: 30px;
@@ -169,8 +238,8 @@ html {
 
 .modal__lives {
     display: flex;
-    margin-bottom: 50px;
-    height: 80px;
+    height: 65px;
+    margin-bottom: 20px;
 }
 .modal__lives--hidden{
     display: none;
@@ -186,7 +255,7 @@ html {
 .modal__btn {
     color: white;
     font-size: 20px;
-    padding: 10px 30px;
+    padding: 7px 30px;
     border: 3px solid white;
     position: relative;
     cursor: pointer;
@@ -215,7 +284,7 @@ html {
 .modal__live--hidden {
     width: 80px;
     height: 65px;
-    transition: 0.2s;
+    transition: 0.25s;
     transition-timing-function: steps(2, jump-end);
     transform: scale(0.5) scale(0);
 }
@@ -225,6 +294,6 @@ html {
 }
 
 .modal__text {
-    font-size: 25px;
-    margin-bottom: 20px;
+    font-size: 22px;
+    margin-bottom: 15px;
 }

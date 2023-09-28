@@ -1,6 +1,20 @@
 import './App.css';
 import {useState, useEffect} from 'react';
 
+function HomeScreen({ title, text}) {
+    const [start, setStart] = useState(true)
+    useEffect(() => {
+        document.addEventListener('keypress', ()=>{setStart(false)});
+    })
+    return <div className={start?"home":"home home--unactive"} onClick={()=>setStart(false)}>
+        <div className="home__content">
+            <h1 className='home__title'>{title}</h1>
+            <p className="home__text">{text}</p>
+        </div>
+    </div>
+
+}
+
 function Square({value, onSquareClick}) {
     return <td>
         <button className='square' onClick={onSquareClick}>{value}</button>
@@ -45,9 +59,10 @@ function Board({xIsNext, squares, onPlay}) {
     );
 }
 
-function Modal({active, children}) {
+function Modal({active, setActive, children}) {
     return <div className={active ? 'modal active' : 'modal'}>
         <div className={active ? 'modal__content active' : 'modal__content'}>
+            <img className='close' src="close.jpg" onClick={() => setActive(false)}></img>
             {children}
         </div>
     </div>
@@ -85,7 +100,7 @@ export default function Game() {
 
     useEffect(() => {
         if (status === "Game over!" || status.startsWith("Winner")) {
-           setTimeout(()=> setModalActive(true), 500)
+            setTimeout(() => setModalActive(true), 500)
         }
     }, [status])
 
@@ -107,7 +122,7 @@ export default function Game() {
     const moves = history.map((squares, move) => {
         let description;
         if (move > 0) {
-            description = 'Go to move #' + move;
+            description = 'Go to move №' + move;
         } else {
             description = 'Go to game start';
         }
@@ -142,17 +157,19 @@ export default function Game() {
         setModalActive(false)
     }
 
-        useEffect(()=>{
-            setTimeout(()=>{
-                if (status==="Game over!"){
-                    setLives((v)=>v-1)
-                }
-            }, 1000)
+    useEffect(() => {
+        setTimeout(() => {
+            if (status === "Game over!") {
+                setLives((v) => v - 1)
+            }
+        }, 1000)
 
-        },[status])
+    }, [status])
+
 
     return (
         <>
+            <HomeScreen title='Tic-Tac-Toe' text='Press any key to start'/>
             <div className={`status ${statusClass}`} onClick={() => setModalActive(true)}>{status}</div>
             <div className='container'>
                 <div className="game">
@@ -166,8 +183,10 @@ export default function Game() {
                     </div>
                 </div>
             </div>
-            <Modal active={modalActive}>
-                <h1 className='modal__title'>{status}</h1>
+            <Modal active={modalActive} setActive={setModalActive}>
+                <h1 className={live ? 'modal__title' : 'modal__title--over'}>{status}</h1>
+                <p className={live ? 'modal__line' : 'modal__line--over'}>. . .
+                    ........._________________________.......... . . .</p>
                 <p className='modal__desc'>{live ? 'Lives:' : "Lives are over!"}</p>
                 <p className={live === 0 ? 'modal__text' : 'modal__text--hidden'}>Watch the video to get lives:</p>
                 <div className={live ? 'modal__lives' : 'modal__lives--hidden'}>
@@ -175,15 +194,19 @@ export default function Game() {
                     <img className={live >= 2 ? 'modal__live' : "modal__live--hidden"} src='heart.png' alt='Lives'/>
                     <img className={live >= 3 ? 'modal__live' : "modal__live--hidden"} src='heart.png' alt='Lives'/>
                 </div>
+                <p className={live ? 'modal__line' : 'modal__line--over'}>. . .
+                    ........._________________________.......... . . .</p>
                 {live ? <div className='btn__container'>
-                <button className='modal__btn modal__btn--play' onClick={() => restart()}>Play again!</button>
-            </div>
-                :
-                <div className='btn__container'>
-                    <button className='modal__btn modal__btn--watch' onClick={() => watch()}>Watch the video!</button>
-                    <button className='modal__btn modal__btn--play' disabled={true} onClick={() => restart()}>Play again!
-                    </button>
-                </div>}
+                        <button className='modal__btn modal__btn--play' onClick={() => restart()}>Play again!</button>
+                    </div>
+                    :
+                    <div className='btn__container'>
+                        <button className='modal__btn modal__btn--watch' onClick={() => watch()}>Watch the video!
+                        </button>
+                        <button className='modal__btn modal__btn--play' disabled={true} onClick={() => restart()}>Play
+                            again!
+                        </button>
+                    </div>}
             </Modal>
 
 
