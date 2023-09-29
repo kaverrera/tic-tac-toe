@@ -1,18 +1,30 @@
 import './App.css';
 import {useState, useEffect} from 'react';
 
-function HomeScreen({ title, text}) {
-    const [start, setStart] = useState(true)
+function HomeScreen({title, text, start, setStart}) {
     useEffect(() => {
-        document.addEventListener('keypress', ()=>{setStart(false)});
+        document.addEventListener('keypress', () => {
+            setStart(false)
+        });
     })
-    return <div className={start?"home":"home home--unactive"} onClick={()=>setStart(false)}>
+    return <div className={start ? "home" : "home home--unactive"} onClick={() => setStart(false)}>
         <div className="home__content">
             <h1 className='home__title'>{title}</h1>
             <p className="home__text">{text}</p>
         </div>
     </div>
 
+}
+
+function Video({videoPlay, setVideoPlay, source, autoPlay}) {
+    return (
+        <div className={videoPlay ?"video__container" : "video__container video__container--hidden"}>
+            <div className="video__border">
+                <video className='video' src={source} onEnded={() => setVideoPlay(false)} autoPlay={autoPlay}>
+                </video>
+            </div>
+        </div>
+    )
 }
 
 function Square({value, onSquareClick}) {
@@ -59,10 +71,11 @@ function Board({xIsNext, squares, onPlay}) {
     );
 }
 
+
 function Modal({active, setActive, children}) {
     return <div className={active ? 'modal active' : 'modal'}>
         <div className={active ? 'modal__content active' : 'modal__content'}>
-            <img className='close' src="close.jpg" onClick={() => setActive(false)}></img>
+            <img className='close' src="close.jpg" onClick={() => setActive(false)} alt="Exit sign"/>
             {children}
         </div>
     </div>
@@ -70,11 +83,20 @@ function Modal({active, setActive, children}) {
 
 
 export default function Game() {
-    // let lives = 3;
+
     const [history, setHistory] = useState(
         [Array(9).fill(null)]);
     const [currentMove, setCurrentMove] = useState(0);
+
+
+
     const [live, setLives] = useState(3)
+
+
+
+    const [start, setStart] = useState(true)
+    const [videoPlay, setVideoPlay] = useState(false)
+    const [autoPlay, setAutoPlay] = useState(false)
 
     const currentSquares = history[currentMove];
     const xIsNext = currentMove % 2 === 0;
@@ -119,30 +141,40 @@ export default function Game() {
         setCurrentMove(nextMove);
     }
 
-    const moves = history.map((squares, move) => {
-        let description;
+    const movesX = history.map((squares, move) => {
+        let description, color
+        if (move === 0) return undefined;
         if (move > 0) {
             description = 'Go to move №' + move;
-        } else {
-            description = 'Go to game start';
         }
-        let color;
-        if (move === 0) {
-            color = "move-to-start"
-        } else if (move % 2 === 0) {
-            color = "move-to-O"
-        } else {
+        if (move % 2 !== 0) {
             color = "move-to-X"
+            return (
+                <li className="moves-item" key={move}>
+                    <button onClick={() => jumpTo(move)} className={`move ${color}`}>
+                        {description}
+                    </button>
+                </li>
+            )
         }
-
-        return (
-            <li className="moves-item" key={move}>
-                <button onClick={() => jumpTo(move)} className={`move ${color}`}>
-                    {description}
-                </button>
-            </li>
-        );
-    });
+    })
+    const movesO = history.map((squares, move) => {
+        let description, color
+        if (move === 0) return undefined;
+        if (move > 0) {
+            description = 'Go to move №' + move;
+        }
+        if (move % 2 === 0) {
+            color = "move-to-O"
+            return (
+                <li className="moves-item" key={move}>
+                    <button onClick={() => jumpTo(move)} className={`move ${color}`}>
+                        {description}
+                    </button>
+                </li>
+            )
+        }
+    })
 
     function restart() {
         setHistory([Array(9).fill(null)]);
@@ -152,6 +184,8 @@ export default function Game() {
 
     function watch() {
         setLives(3);
+        setVideoPlay(true)
+        setAutoPlay(true)
         setHistory([Array(9).fill(null)]);
         setCurrentMove(0)
         setModalActive(false)
@@ -165,30 +199,40 @@ export default function Game() {
         }, 1000)
 
     }, [status])
+    useEffect(() => {
+        document.addEventListener('keypress', restart);
+    })
 
 
     return (
         <>
-            <HomeScreen title='Tic-Tac-Toe' text='Press any key to start'/>
-            <div className={`status ${statusClass}`} onClick={() => setModalActive(true)}>{status}</div>
+            <HomeScreen title='Tic-Tac-Toe' text='Press any key to start' start={start} setStart={setStart}/>
+            <p className={start ? "decor--hidden" : "decor"}><span
+                className='decor__text'>XOXOXOXOXOXOXOXOXOXOXOX</span></p>
+            <div className={`status ${statusClass}`}>{status}</div>
             <div className='container'>
                 <div className="game">
+                    <div className="game-info">
+                        <ul className='move-list'>{movesX}</ul>
+                    </div>
                     <div className="game-board">
                         <Board xIsNext={xIsNext}
                                squares={currentSquares}
                                onPlay={handlePlay}/>
                     </div>
                     <div className="game-info">
-                        <ul className='move-list'>{moves}</ul>
+                        <ul className='move-list'>{movesO}</ul>
                     </div>
                 </div>
             </div>
+            <p className={start ? "decor--hidden" : "decor"}><span
+                className='decor__text'>XOXOXOXOXOXOXOXOXOX0X0X</span></p>
             <Modal active={modalActive} setActive={setModalActive}>
                 <h1 className={live ? 'modal__title' : 'modal__title--over'}>{status}</h1>
                 <p className={live ? 'modal__line' : 'modal__line--over'}>. . .
                     ........._________________________.......... . . .</p>
-                <p className='modal__desc'>{live ? 'Lives:' : "Lives are over!"}</p>
-                <p className={live === 0 ? 'modal__text' : 'modal__text--hidden'}>Watch the video to get lives:</p>
+                <p className={live ? 'modal__desc' : 'modal__desc--over'}>{live ? 'Lives:' : "Lives are over!"}</p>
+                <p className={live ? 'modal__text--hidden' : 'modal__text'}>Watch the video to get lives:</p>
                 <div className={live ? 'modal__lives' : 'modal__lives--hidden'}>
                     <img className={live >= 1 ? 'modal__live' : "modal__live--hidden"} src='heart.png' alt='Lives'/>
                     <img className={live >= 2 ? 'modal__live' : "modal__live--hidden"} src='heart.png' alt='Lives'/>
@@ -208,6 +252,7 @@ export default function Game() {
                         </button>
                     </div>}
             </Modal>
+            <Video source="little-cats.mp4" videoPlay={videoPlay} setVideoPlay={setVideoPlay} autoPlay={autoPlay}/>
 
 
         </>
