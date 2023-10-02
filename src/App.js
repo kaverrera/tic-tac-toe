@@ -1,10 +1,11 @@
 import './App.css';
 import {useState, useEffect} from 'react';
 
-function HomeScreen({title, text, start, setStart}) {
+function HomeScreen({title, text, start, setStart, restart}) {
     useEffect(() => {
         document.addEventListener('keypress', () => {
             setStart(false)
+            restart()
         });
     })
     return <div className={start ? "home" : "home home--unactive"} onClick={() => setStart(false)}>
@@ -18,7 +19,7 @@ function HomeScreen({title, text, start, setStart}) {
 
 function Video({videoPlay, setVideoPlay, source, autoPlay}) {
     return (
-        <div className={videoPlay ?"video__container" : "video__container video__container--hidden"}>
+        <div className={videoPlay ? "video__container" : "video__container video__container--hidden"}>
             <div className="video__border">
                 <video className='video' src={source} onEnded={() => setVideoPlay(false)} autoPlay={autoPlay}>
                 </video>
@@ -72,10 +73,14 @@ function Board({xIsNext, squares, onPlay}) {
 }
 
 
-function Modal({active, setActive, children}) {
+function Modal({active, setActive, children, restart}) {
     return <div className={active ? 'modal active' : 'modal'}>
         <div className={active ? 'modal__content active' : 'modal__content'}>
-            <img className='close' src="close.jpg" onClick={() => setActive(false)} alt="Exit sign"/>
+            <img className='close' src="close.jpg" onClick={() => {
+                setActive(false)
+                document.addEventListener('keypress', restart);
+            }
+            } alt="Exit sign"/>
             {children}
         </div>
     </div>
@@ -89,9 +94,7 @@ export default function Game() {
     const [currentMove, setCurrentMove] = useState(0);
 
 
-
     const [live, setLives] = useState(3)
-
 
 
     const [start, setStart] = useState(true)
@@ -177,9 +180,11 @@ export default function Game() {
     })
 
     function restart() {
-        setHistory([Array(9).fill(null)]);
-        setCurrentMove(0)
-        setModalActive(false)
+        if (live > 0) {
+            setHistory([Array(9).fill(null)]);
+            setCurrentMove(0)
+            setModalActive(false)
+        }
     }
 
     function watch() {
@@ -199,16 +204,17 @@ export default function Game() {
         }, 1000)
 
     }, [status])
-    useEffect(() => {
-        document.addEventListener('keypress', restart);
-    })
 
 
     return (
         <>
-            <HomeScreen title='Tic-Tac-Toe' text='Press any key to start' start={start} setStart={setStart}/>
-            <p className={start ? "decor--hidden" : "decor"}><span
+            <HomeScreen title='Tic-Tac-Toe' text='Press any key to start' start={start} setStart={setStart} restart={restart}/>
+            <p className={start ? "decor--hidden" : "decor decor--big"}><span
                 className='decor__text'>XOXOXOXOXOXOXOXOXOXOXOX</span></p>
+            <p className={start ? "decor--hidden" : "decor decor--medium"}><span
+                className='decor__text'>XOXOXOXOXOXOXOXOXOXOXOX</span></p>
+            <p className={start ? "decor--hidden" : "decor decor--small"}><span
+                className='decor__text'>XOXOXOXOXOXOXOXOXOXOXOXOXOX</span></p>
             <div className={`status ${statusClass}`}>{status}</div>
             <div className='container'>
                 <div className="game">
@@ -225,9 +231,13 @@ export default function Game() {
                     </div>
                 </div>
             </div>
-            <p className={start ? "decor--hidden" : "decor"}><span
-                className='decor__text'>XOXOXOXOXOXOXOXOXOX0X0X</span></p>
-            <Modal active={modalActive} setActive={setModalActive}>
+            <p className={start ? "decor--hidden" : "decor decor--big"}><span
+                className='decor__text'>XOXOXOXOXOXOXOXOXOXOXOX</span></p>
+            <p className={start ? "decor--hidden" : "decor decor--medium"}><span
+                className='decor__text'>XOXOXOXOXOXOXOXOXOXOXOX</span></p>
+            <p className={start ? "decor--hidden" : "decor decor--small"}><span
+                className='decor__text'>XOXOXOXOXOXOXOXOXOXOXOXOXOX</span></p>
+            <Modal active={modalActive} setActive={setModalActive} restart={restart}>
                 <h1 className={live ? 'modal__title' : 'modal__title--over'}>{status}</h1>
                 <p className={live ? 'modal__line' : 'modal__line--over'}>. . .
                     ........._________________________.......... . . .</p>

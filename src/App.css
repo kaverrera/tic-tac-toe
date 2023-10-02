@@ -301,7 +301,6 @@ html {
 }
 .decor{
     color: white;
-    font-size: 30px;
     writing-mode: vertical-lr;
     text-orientation: upright;
     position: absolute;
@@ -309,6 +308,7 @@ html {
     letter-spacing: 10px;
     background: repeating-linear-gradient(rgba(127, 255, 0, 0.7) 0px,rgba(127, 255, 0, 0.7) 30px, rgba(255, 165, 0, 0.8) 30px, rgba(255, 165, 0, 0.8) 60px);
 }
+
 .decor--hidden{
     display: none;
 }
@@ -331,13 +331,36 @@ html {
         transform: translateY(0%)
     }
 }
-.decor:first-of-type{
+
+.decor--big{
+    position: absolute;
+    font-size: 30px;
     top: 0;
-    left: 20px;
+    left: 10px;
 }
-.decor:last-of-type{
+
+.decor--medium{
+    position: absolute;
+    font-size: 20px;
     top: 0;
-    right: 20px;
+    left: 50px;
+}
+.decor--small{
+    font-size: 10px;
+    top: 0;
+    left: 90px;
+    letter-spacing: 15px;
+}
+
+.decor--big:nth-child(2){
+    left: 97vw;
+}
+.decor--medium:nth-child(3){
+    left: 95vw;
+    position: absolute;
+}
+.decor--small:nth-child(4){
+    left: 93vw;
 }
 .video__container{
     position: absolute;
