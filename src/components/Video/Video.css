@@ -1,0 +1,24 @@
+.video__container{
+    position: absolute;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background: black;
+}
+.video__container--hidden{
+    transition-duration: 0.5s;
+    transition-timing-function:  steps(7, jump-end);
+    transform: scale(0);
+}
+.video__border{
+    margin: auto;
+    background-color: black;
+    padding: 10px;
+    border: 5px solid white;
+    height: 562px;
+}
+.video{
+    width: 500px;
+}

@@ -1,0 +1,15 @@
+.square-x {
+    color: chartreuse;
+}
+
+.square-y {
+    color: orange;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+    justify-content: center;
+    border: 3px solid rgba(254, 254, 254, 0.9);
+}

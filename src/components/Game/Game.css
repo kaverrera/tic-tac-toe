@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'VT323', monospace;
+}
+
+html {
+    background-color: black;
+}
+.container {
+    max-width: 1200px;
+    display: flex;
+    margin: auto;
+    justify-content: space-around;
+}
+
+.square {
+    font-size: 55px;
+    font-weight: 700;
+    width: 130px;
+    height: 130px;
+    background-color: black;
+    cursor: pointer;
+    text-align: center;
+    border: 3px solid rgba(254, 254, 254, 0.9);
+
+}
+
+.game {
+    display: flex;
+    gap: 100px;
+}
+
+.status {
+    font-size: 60px;
+    font-weight: 700;
+    width: 400px;
+    margin: 40px auto 65px;
+    min-height: 80px;
+    text-align: center;
+    color: white;
+    letter-spacing: 2px;
+}
+
+.status-win--x {
+    font-size: 60px;
+    font-weight: 700;
+    color: chartreuse;
+}
+
+.status-win--y {
+    font-size: 60px;
+    font-weight: 700;
+    color: orange;
+}
+
+.status--over {
+    font-size: 60px;
+    font-weight: 700;
+    color: red;
+}
+
+.moves-item {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.move {
+    font-size: 27px;
+    font-weight: 700;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.move-to-start {
+    color: rgba(254, 254, 254, 0.9);
+}
+
+.move-to-X {
+    color: chartreuse;
+}
+
+.move-to-O {
+    color: orange;
+}
+
+.move-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    list-style-type: none;
+    margin: 30px 0;
+    width: 165px;
+}
+.decor{
+    color: white;
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+    position: absolute;
+    overflow: hidden;
+    letter-spacing: 10px;
+    background: repeating-linear-gradient(rgba(127, 255, 0, 0.7) 0px,rgba(127, 255, 0, 0.7) 30px, rgba(255, 165, 0, 0.8) 30px, rgba(255, 165, 0, 0.8) 60px);
+}
+
+.decor--hidden{
+    display: none;
+}
+.decor__text{
+    display: inline-block;
+    width: 100%;
+    color: white;
+    background: black;
+    mix-blend-mode: darken;
+    animation: ticker 10s steps(70, jump-start) infinite;
+}
+.decor__text::after{
+    content: "XOXOXOXOXOXOXOXOXOXO";
+}
+@keyframes ticker{
+    0% {
+        transform: translateY(-40%)
+    }
+    100% {
+        transform: translateY(0%)
+    }
+}
+
+.decor--big{
+    position: absolute;
+    font-size: 30px;
+    top: 0;
+    left: 10px;
+}
+
+.decor--medium{
+    position: absolute;
+    font-size: 20px;
+    top: 0;
+    left: 50px;
+}
+.decor--small{
+    font-size: 10px;
+    top: 0;
+    left: 90px;
+    letter-spacing: 15px;
+}
+
+.decor--big:nth-child(2){
+    left: 97vw;
+}
+.decor--medium:nth-child(3){
+    left: 95vw;
+    position: absolute;
+}
+.decor--small:nth-child(4){
+    left: 93vw;
+}

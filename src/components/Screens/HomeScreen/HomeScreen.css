@@ -1,0 +1,37 @@
+.home{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    background-color: black;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+.home--unactive{
+    transform: scale(0);
+    transition-timing-function: steps(8, jump-start);
+    transition-duration: 0.6s;
+}
+.home__content{
+    max-width: 450px;
+    margin: auto;
+    color: white;
+    overflow: hidden;
+}
+.home__title{
+    font-size: 100px;
+
+}
+.home__text{
+    font-size: 30px;
+    text-align: center;
+    animation: marquee 7s steps(40, jump-start) infinite;
+}
+@keyframes marquee{
+    0% {
+        transform: translateX(100%)
+    }
+    100% {
+        transform: translateX(-100%)
+    }
+}
